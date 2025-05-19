@@ -1,0 +1,97 @@
+Flink隧道工具使用说明
+==================
+
+一、快速开始（推荐方式）
+-------------------
+1. 解压工具包：
+   tar xzf flink-tunnel.tar.gz
+   cd flink-tunnel-release
+
+2. 一键启动：
+   ./start_tunnel.sh
+
+3. 验证代理：
+   curl --socks5 127.0.0.1:1080 http://www.baidu.com
+
+二、手动配置方式
+------------
+1. 确保Docker已安装
+   docker --version
+
+2. 启动Flink环境：
+   docker-compose up -d
+
+3. 启动代理客户端：
+   java -cp flink-tunnel-1.0-SNAPSHOT.jar com.example.ProxyClient
+
+4. 上传并运行Flink任务：
+   curl -X POST -H "Expect:" -F "jarfile=@flink-tunnel-1.0-SNAPSHOT.jar" http://localhost:8081/jars/upload
+   # 复制返回的JAR ID，替换下面命令中的{JAR_ID}
+   curl -X POST "http://localhost:8081/jars/{JAR_ID}/run"
+
+三、代理配置说明
+------------
+SOCKS5代理信息：
+- 地址：127.0.0.1
+- 端口：1080
+
+常见使用示例：
+1. curl命令：
+   curl --socks5 127.0.0.1:1080 http://example.com
+
+2. Firefox浏览器：
+   设置 -> 网络设置 -> 手动代理配置
+   SOCKS主机：127.0.0.1
+   端口：1080
+   选择：SOCKS v5
+
+3. Chrome浏览器：
+   可使用SwitchyOmega插件配置
+   代理协议：SOCKS5
+   代理服务器：127.0.0.1
+   代理端口：1080
+
+四、故障排除
+---------
+1. 代理连接失败：
+   - 检查start_tunnel.sh是否正在运行
+   - 查看docker ps确认Flink容器状态
+   - 检查端口1080是否被占用：lsof -i:1080
+
+2. 连接速度慢：
+   - 检查目标服务器网络状态
+   - 查看Flink UI监控数据
+   - 调整JVM参数优化性能
+
+3. 常见错误：
+   - "Connection refused"：检查代理客户端是否运行
+   - "Connection timeout"：检查网络连接
+   - "SOCKS5 proxy error"：确认Flink任务状态
+
+五、清理和关闭
+-----------
+1. 停止所有组件：
+   docker-compose down
+   pkill -f ProxyClient
+   pkill -f health_check.sh
+
+2. 删除临时文件：
+   rm -rf target/
+   docker system prune -f
+
+六、安全建议
+---------
+1. 使用完毕后及时关闭所有组件
+2. 定期检查和更新系统
+3. 遵守相关法律法规
+4. 仅用于授权测试活动
+
+七、技术支持
+---------
+如遇问题，请提供以下信息：
+1. 系统环境信息
+2. 详细错误信息
+3. 操作步骤复现
+4. 相关日志文件
+
+通过Issue或Pull Request获取支持。

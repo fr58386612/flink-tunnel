@@ -1,0 +1,33 @@
+# Maven
+target/
+*.jar
+!flink-tunnel-release/*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Logs
+*.log
+*.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*~
+*.bak
+
+# Build
+build/
+out/
+dist/
+
+# Docker
+.docker/
